@@ -1,64 +1,93 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import { Dumbbell, LineChart, Sparkles, Trophy } from "lucide-react";
+import marcioPhoto from "@/assets/marcio.png";
 
-const stats = [
-  { value: "5+", label: "Years Experience" },
-  { value: "10+", label: "Projects Delivered" },
-  { value: "2", label: "Industries" },
+const cards = [
+  {
+    icon: LineChart,
+    title: "How I think",
+    body: "First principles, receipts on every number, and a bias for simple models that survive stress tests.",
+  },
+  {
+    icon: Sparkles,
+    title: "What I’m learning",
+    body: "AI workflows, lightweight agents, and product-like interfaces for complex financial/risk concepts.",
+  },
+  {
+    icon: Trophy,
+    title: "Sport",
+    body: "Tennis + padel, plus CrossFit-style training. I like measurable progress and hard feedback loops.",
+  },
+  {
+    icon: Dumbbell,
+    title: "Outside work",
+    body: "Building small tools and dashboards (valuation, risk, automation) — mostly to learn and share.",
+  },
 ];
 
 const AboutSection = () => {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-120px" });
 
   return (
-    <section id="about" className="py-32 md:py-48 px-6">
-      <div ref={ref} className="max-w-4xl mx-auto">
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
+    <section id="about" className="scroll-mt-24 border-t border-border/40">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <motion.div
+          ref={ref}
+          initial={{ opacity: 0, y: 12 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-sm tracking-[0.3em] uppercase text-accent mb-8"
+          className="grid grid-cols-1 gap-10 lg:grid-cols-12"
         >
-          About
-        </motion.p>
+          <div className="lg:col-span-5">
+            <div className="overflow-hidden rounded-3xl border border-border/60 bg-background/50 shadow-sm">
+              <img
+                src={marcioPhoto}
+                alt="Marcio Herlein"
+                className="h-[420px] w-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          </div>
 
-        <motion.h2
-          initial={{ opacity: 0, y: 40 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.1 }}
-          className="text-3xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-foreground leading-tight mb-12"
-        >
-          I bridge the gap between{" "}
-          <span className="text-accent">financial thinking</span> and{" "}
-          <span className="text-accent">technical execution</span>.
-        </motion.h2>
+          <div className="lg:col-span-7">
+            <p className="text-sm font-medium text-primary">About</p>
+            <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
+              Finance-minded, product-curious.
+            </h2>
+            <p className="mt-4 max-w-3xl text-base leading-relaxed text-muted-foreground">
+              I work in Enterprise Risk Management (ERM) and spend a lot of my free time building.
+              The common thread: taking complex systems (risk, accounting, valuation, regulation) and turning them into
+              clear narratives, decision-ready frameworks, and simple tools people can actually use.
+            </p>
 
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-lg md:text-xl text-muted-foreground font-light leading-relaxed max-w-3xl mb-20"
-        >
-          With a background spanning equity research, financial modeling, and full-stack development, 
-          I create tools and experiences that make complex financial data accessible and actionable. 
-          My work lives at the intersection of analytical rigor and thoughtful design.
-        </motion.p>
-
-        <div className="grid grid-cols-3 gap-8 md:gap-16">
-          {stats.map((stat, i) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.5 + i * 0.15 }}
-              className="text-center md:text-left"
-            >
-              <div className="text-3xl md:text-5xl font-semibold text-foreground mb-2">{stat.value}</div>
-              <div className="text-sm text-muted-foreground tracking-wide">{stat.label}</div>
-            </motion.div>
-          ))}
-        </div>
+            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {cards.map((c, i) => {
+                const Icon = c.icon;
+                return (
+                  <motion.div
+                    key={c.title}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.5, delay: 0.05 + i * 0.05 }}
+                    className="rounded-2xl border border-border/60 bg-background/50 p-5 shadow-sm"
+                  >
+                    <div className="flex items-start gap-3">
+                      <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-accent">
+                        <Icon className="h-5 w-5" />
+                      </span>
+                      <div>
+                        <p className="font-medium">{c.title}</p>
+                        <p className="mt-1 text-sm text-muted-foreground">{c.body}</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

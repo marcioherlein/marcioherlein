@@ -4,21 +4,22 @@ import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
 import ExperienceSection from "@/components/ExperienceSection";
 import ProjectsSection from "@/components/ProjectsSection";
-import TestimonialsSection from "@/components/TestimonialsSection";
 import ContactSection from "@/components/ContactSection";
 
 const Index = () => {
   return (
-    <main className="bg-background">
+    <div className="min-h-screen bg-background text-foreground">
       <ScrollProgress />
       <Navbar />
-      <HeroSection />
-      <AboutSection />
-      <ExperienceSection />
-      <ProjectsSection />
-      <TestimonialsSection />
-      <ContactSection />
-    </main>
+
+      <main>
+        <HeroSection />
+        <AboutSection />
+        <ExperienceSection />
+        <ProjectsSection />
+        <ContactSection />
+      </main>
+    </div>
   );
 };
 
