@@ -2,8 +2,6 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import marcioPhoto from "@/assets/marcio.png";
-import tennis1 from "@/assets/tennis-1.jpeg";
-import tennis2 from "@/assets/tennis-2.jpeg";
 import ScrollBackdrop from "./ScrollBackdrop";
 
 const HeroSection = () => {
@@ -15,26 +13,7 @@ const HeroSection = () => {
 
   return (
     <section ref={ref as any} className="relative overflow-hidden pt-24" aria-label="Hero">
-      <ScrollBackdrop
-        layers={[
-          {
-            src: tennis1,
-            className: "absolute -left-24 top-16 h-[340px] w-[340px] rounded-[36px] object-cover",
-            opacity: 0.14,
-            blur: 1,
-            rotate: "-8deg",
-            speed: 70,
-          },
-          {
-            src: tennis2,
-            className: "absolute -right-20 top-32 h-[360px] w-[360px] rounded-[40px] object-cover",
-            opacity: 0.12,
-            blur: 1,
-            rotate: "8deg",
-            speed: 85,
-          },
-        ]}
-      />
+      <ScrollBackdrop />
 
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-4 pb-16 pt-10 sm:px-6 lg:grid-cols-12 lg:px-8 lg:pb-20">
         {/* Copy */}
