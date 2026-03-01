@@ -39,39 +39,156 @@ const caseStudies = [
   },
 ];
 
-const valuationWriteups = [
+type KV = { k: string; v: string };
+
+type DcfRow = {
+  scenario: string;
+  growth: string;
+  wacc: string;
+  g: string;
+  price: string;
+};
+
+type ValuationReport = {
+  id: string;
+  title: string;
+  ticker: string;
+  subtitle: string;
+  oneLiner: string;
+  highlights: string[];
+  keyFinancials: KV[];
+  dcf: {
+    assumptions: string;
+    rows: DcfRow[];
+    market: string;
+  };
+  notes?: string[];
+  risks?: string[];
+  links: {
+    pdf: string;
+    linkedin: string;
+  };
+};
+
+const valuationReports: ValuationReport[] = [
   {
-    title: "Valuation write-up #1",
-    description:
-      "A structured valuation note focused on deterministic modeling, scenario thinking, and explicitly stating what must be true.",
+    id: "tgs",
+    title: "Transportadora de Gas del Sur",
+    ticker: "TGS",
+    subtitle: "Trailing 12-month analysis — Oct 2025",
+    oneLiner:
+      "Argentina’s largest natural-gas pipeline operator with a blended regulated pipeline + USD-linked liquids export profile.",
     highlights: [
-      "DCF + sensitivity grid",
-      "Reverse-DCF reality check",
-      "Clear risk list (drivers → failure modes)",
+      "TTM (Sep-2025): Revenue ~$931M, Net Income ~$245M, FCF ~$207M (~22% margin)",
+      "DCF base-case: $27.9/ADR vs market ~$20.3 (Oct-25) → ~+35% upside",
+      "Update: ADR later traded around ~$32.4 (post update), surpassing the base target",
     ],
-    url: "https://www.linkedin.com/posts/activity-7388576566148157440-hVJC",
+    keyFinancials: [
+      { k: "Revenue (TTM)", v: "~USD 931M" },
+      { k: "Net income (TTM)", v: "~USD 245M" },
+      { k: "Free cash flow (TTM)", v: "~USD 207M (~22% margin)" },
+      { k: "Net cash", v: "~USD 250M" },
+      { k: "Shares / ADRs", v: "~150.5M" },
+      { k: "Mix", v: "Regulated ARS-indexed pipeline + USD-linked liquids exports" },
+    ],
+    dcf: {
+      assumptions: "Base FCF USD 207M, 5-year projection, WACC 9.5%, terminal growth 2%.",
+      rows: [
+        { scenario: "Bull", growth: "+12%", wacc: "8.5%", g: "3%", price: "$44.8" },
+        { scenario: "Base", growth: "+7%", wacc: "9.5%", g: "2%", price: "$27.9" },
+        { scenario: "Bear", growth: "+2%", wacc: "11%", g: "1%", price: "$15.9" },
+      ],
+      market: "Market price (Oct-25): ~$20.3/ADR",
+    },
+    risks: [
+      "Regulatory risk (tariff lags, intervention)",
+      "FX / inflation (peso devaluation impacts USD value)",
+      "Commodity exposure (LPG/NGL export volatility)",
+      "Execution risk (midstream project delays)",
+      "Country risk premium keeps WACC elevated",
+    ],
+    links: {
+      pdf: "/valuations/TGS_Equity_Valuation_Oct_2025.pdf",
+      linkedin: "https://www.linkedin.com/posts/activity-7388576566148157440-hVJC",
+    },
   },
   {
-    title: "Valuation write-up #2",
-    description:
-      "A follow-up analysis emphasizing input traceability and model discipline (no hand-wavy numbers).",
+    id: "pags",
+    title: "PagSeguro Digital (PagBank)",
+    ticker: "PAGS",
+    subtitle: "Equity valuation report — Oct 2025",
+    oneLiner:
+      "A diversified Brazilian fintech bridging payment acquiring, digital banking, and credit — trading at a discount vs peers despite improving fundamentals.",
     highlights: [
-      "Receipts on key inputs",
-      "Consistency checks (growth, margin, reinvestment)",
-      "Base/Bull/Bear scenario framing",
+      "Stock ~7× earnings; peers trade materially higher",
+      "DCF base-case: $13.6/ADR vs ~$9.2 current → ~+48% upside",
+      "Cross-check: peer-median multiples imply ~$13.8–$14.4/ADR",
     ],
-    url: "https://www.linkedin.com/posts/activity-7381333710815657986-gRjX",
+    keyFinancials: [
+      { k: "FY2024 revenue", v: "R$ 18.3B (USD ~3.45B), +17%" },
+      { k: "FY2024 net income", v: "R$ 2.12B (USD ~399M), +28%" },
+      { k: "Gross margin", v: "~49%" },
+      { k: "Net margin", v: "~11–12%" },
+      { k: "ROE", v: "~15%" },
+      { k: "Operating cash flow", v: "Positive (R$ 3.45B in Q2 2025)" },
+    ],
+    dcf: {
+      assumptions: "Scenario DCF (growth/WACC/terminal g) + sensitivity cross-check.",
+      rows: [
+        { scenario: "Bull", growth: "12%", wacc: "9%", g: "3%", price: "$24.5" },
+        { scenario: "Base", growth: "7%", wacc: "10%", g: "2%", price: "$13.6" },
+        { scenario: "Bear", growth: "2%", wacc: "12%", g: "1%", price: "$8.5" },
+      ],
+      market: "Current price referenced: ~$9.2/ADR",
+    },
+    notes: [
+      "Comparable set includes STNE / NU / Cielo / MELI; peer-median P/E ~12.7× and EV/EBITDA ~11.2×.",
+      "Implied value using multiples: P/E ≈ $14.4 and EV/EBITDA ≈ $13.8.",
+      "Narrative driver: if Brazil rates ease into 2026, cost of capital drops and margins can expand.",
+    ],
+    links: {
+      pdf: "/valuations/PAGS_Equity_Valuation_Oct_2025.pdf",
+      linkedin: "https://www.linkedin.com/posts/activity-7351724788022751235-xoJP",
+    },
   },
   {
-    title: "Valuation write-up #3",
-    description:
-      "A deeper dive into valuation mechanics and how narrative ties back to cash flows (and not the other way around).",
+    id: "nu",
+    title: "Nubank",
+    ticker: "NU",
+    subtitle: "Equity valuation report — July 2025",
+    oneLiner:
+      "LatAm digital banking leader valued with a driver-based DCF (customers × ARPAC → revenue → margins) and scenario ranges tied to Brazil macro.",
     highlights: [
-      "Driver-based narrative",
-      "Risk-to-cash-flow mapping",
-      "Outputs formatted for sharing",
+      "Share price (Jul-2025): $14; base-case DCF fair value: $17.13 → >22% upside",
+      "Scenario range: ~$9.1 (worst) to ~$25.6 (bull)",
+      "Key debate: premium multiple (33× P/E) vs industry average (21×)",
     ],
-    url: "https://www.linkedin.com/posts/activity-7351724788022751235-xoJP",
+    keyFinancials: [
+      { k: "Market cap", v: "$67.8B" },
+      { k: "2024 revenue", v: "$11.5B" },
+      { k: "2024 net income", v: "$2.0B" },
+      { k: "2024 net margin", v: "17%" },
+      { k: "P/E", v: "33× (industry avg ~21×)" },
+      { k: "DCF fair value (base)", v: "$17.13" },
+    ],
+    dcf: {
+      assumptions:
+        "Bottom-up DCF: forecast customers × ARPAC, apply margin; discount at scenario-specific cost of equity; terminal growth varies by scenario.",
+      rows: [
+        { scenario: "Worst", growth: "Cust 12% / ARPAC 5%", wacc: "15%", g: "2%", price: "$9.1" },
+        { scenario: "Base", growth: "Cust 17% / ARPAC 9%", wacc: "12%", g: "4%", price: "$17.13" },
+        { scenario: "Bull", growth: "Cust 21% / ARPAC 13%", wacc: "11%", g: "5%", price: "$25.6" },
+      ],
+      market: "Share price referenced: $14 (Jul-2025)",
+    },
+    notes: [
+      "Multiple cross-check: implied 2025 price @ 33× P/E ≈ $19.7; @ 21× ≈ $12.5.",
+      "Macro framing: Selic ~15% and inflation ~5% (as of Jul-2025) meaningfully affects discount rates and credit growth assumptions.",
+    ],
+    links: {
+      pdf: "/valuations/NU_Equity_Valuation_Report_July_2025.pdf",
+      linkedin: "https://www.linkedin.com/posts/activity-7381333710815657986-gRjX",
+    },
   },
 ];
 
@@ -122,44 +239,138 @@ const ProjectsSection = () => {
           ))}
         </div>
 
-        {/* Valuation writeups */}
+        {/* Valuation */}
         <div className="mt-14">
           <div className="max-w-3xl">
             <p className="text-sm font-medium text-primary">Valuation</p>
             <h3 className="mt-2 text-2xl font-semibold tracking-tight">Valuation projects & write-ups</h3>
             <p className="mt-3 text-sm text-muted-foreground">
-              Detailed notes and model write-ups. Links point to LinkedIn posts.
+              A few public write-ups where I turn a messy story into a simple model, stress-test the assumptions, and
+              show ranges (bull/base/bear). You can download the PDFs or open the LinkedIn posts.
             </p>
           </div>
 
-          <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-            {valuationWriteups.map((v) => (
-              <div
-                key={v.title}
-                className="rounded-2xl border border-border/60 bg-background/50 p-5 shadow-sm"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <p className="font-medium">{v.title}</p>
-                  <a
-                    href={v.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-muted-foreground transition hover:bg-accent hover:text-foreground"
-                  >
-                    Open <ExternalLink className="h-3.5 w-3.5" />
-                  </a>
+          <div className="mt-6 grid grid-cols-1 gap-4">
+            {valuationReports.map((r) => (
+              <div key={r.id} className="rounded-2xl border border-border/60 bg-background/50 p-5 shadow-sm">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-primary">{r.ticker}</p>
+                    <p className="mt-1 text-xl font-semibold tracking-tight">{r.title}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">{r.subtitle}</p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    <a
+                      href={r.links.pdf}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 rounded-lg border border-border/60 bg-background px-3 py-2 text-xs font-medium text-muted-foreground transition hover:bg-accent hover:text-foreground"
+                    >
+                      Download PDF <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                    <a
+                      href={r.links.linkedin}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 rounded-lg border border-border/60 bg-background px-3 py-2 text-xs font-medium text-muted-foreground transition hover:bg-accent hover:text-foreground"
+                    >
+                      LinkedIn <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  </div>
                 </div>
 
-                <p className="mt-2 text-sm text-muted-foreground">{v.description}</p>
+                <p className="mt-3 text-sm text-muted-foreground">{r.oneLiner}</p>
 
                 <ul className="mt-4 space-y-2 text-sm">
-                  {v.highlights.map((h) => (
+                  {r.highlights.map((h) => (
                     <li key={h} className="flex items-start gap-2 text-muted-foreground">
                       <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
                       <span>{h}</span>
                     </li>
                   ))}
                 </ul>
+
+                <details className="mt-5 rounded-xl border border-border/60 bg-background/40 p-4">
+                  <summary className="cursor-pointer select-none text-sm font-medium">
+                    Open details (key financials, DCF scenarios, risks)
+                  </summary>
+
+                  <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
+                    <div className="rounded-xl border border-border/60 bg-background/50 p-4">
+                      <p className="text-sm font-medium">Key financials</p>
+                      <div className="mt-3 space-y-2 text-sm">
+                        {r.keyFinancials.map((it) => (
+                          <div key={it.k} className="flex items-start justify-between gap-4">
+                            <span className="text-muted-foreground">{it.k}</span>
+                            <span className="font-medium">{it.v}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="rounded-xl border border-border/60 bg-background/50 p-4">
+                      <p className="text-sm font-medium">DCF scenarios</p>
+                      <p className="mt-2 text-xs text-muted-foreground">{r.dcf.assumptions}</p>
+                      <div className="mt-3 overflow-x-auto">
+                        <table className="w-full min-w-[520px] text-left text-sm">
+                          <thead>
+                            <tr className="border-b border-border/60 text-xs text-muted-foreground">
+                              <th className="py-2 pr-3 font-medium">Scenario</th>
+                              <th className="py-2 pr-3 font-medium">Growth</th>
+                              <th className="py-2 pr-3 font-medium">WACC / Disc.</th>
+                              <th className="py-2 pr-3 font-medium">Terminal g</th>
+                              <th className="py-2 font-medium">Value / ADR</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {r.dcf.rows.map((row) => (
+                              <tr key={row.scenario} className="border-b border-border/40">
+                                <td className="py-2 pr-3 font-medium">{row.scenario}</td>
+                                <td className="py-2 pr-3 text-muted-foreground">{row.growth}</td>
+                                <td className="py-2 pr-3 text-muted-foreground">{row.wacc}</td>
+                                <td className="py-2 pr-3 text-muted-foreground">{row.g}</td>
+                                <td className="py-2 font-medium">{row.price}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      <p className="mt-3 text-xs text-muted-foreground">{r.dcf.market}</p>
+                    </div>
+                  </div>
+
+                  {r.notes?.length ? (
+                    <div className="mt-4 rounded-xl border border-border/60 bg-background/50 p-4">
+                      <p className="text-sm font-medium">Notes / cross-checks</p>
+                      <ul className="mt-3 space-y-2 text-sm">
+                        {r.notes.map((n) => (
+                          <li key={n} className="flex items-start gap-2 text-muted-foreground">
+                            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                            <span>{n}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
+
+                  {r.risks?.length ? (
+                    <div className="mt-4 rounded-xl border border-border/60 bg-background/50 p-4">
+                      <p className="text-sm font-medium">Risks</p>
+                      <ul className="mt-3 space-y-2 text-sm">
+                        {r.risks.map((risk) => (
+                          <li key={risk} className="flex items-start gap-2 text-muted-foreground">
+                            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                            <span>{risk}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="mt-3 text-xs text-muted-foreground">
+                        Disclaimer: these notes are for informational purposes only and are not investment advice.
+                      </p>
+                    </div>
+                  ) : null}
+                </details>
               </div>
             ))}
           </div>
@@ -177,10 +388,7 @@ const ProjectsSection = () => {
 
           <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
             {explorations.map((e) => (
-              <div
-                key={e.title}
-                className="rounded-2xl border border-border/60 bg-background/50 p-5 shadow-sm"
-              >
+              <div key={e.title} className="rounded-2xl border border-border/60 bg-background/50 p-5 shadow-sm">
                 <p className="font-medium">{e.title}</p>
                 <p className="mt-2 text-sm text-muted-foreground">{e.body}</p>
               </div>
