@@ -2,6 +2,8 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Dumbbell, LineChart, Sparkles, Trophy } from "lucide-react";
 import marcioPhoto from "@/assets/marcio.png";
+import tennis1 from "@/assets/tennis-1.jpeg";
+import tennis2 from "@/assets/tennis-2.jpeg";
 
 const cards = [
   {
@@ -41,13 +43,42 @@ const AboutSection = () => {
           className="grid grid-cols-1 gap-10 lg:grid-cols-12"
         >
           <div className="lg:col-span-5">
-            <div className="overflow-hidden rounded-3xl border border-border/60 bg-background/50 shadow-sm">
-              <img
-                src={marcioPhoto}
-                alt="Marcio Herlein"
-                className="h-[420px] w-full object-cover"
-                loading="lazy"
-              />
+            <div className="relative">
+              <div className="overflow-hidden rounded-3xl border border-border/70 bg-background/60 shadow-sm backdrop-blur">
+                <img src={marcioPhoto} alt="Marcio Herlein" className="h-[420px] w-full object-cover" loading="lazy" />
+              </div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="absolute -left-6 -top-6 hidden w-44 overflow-hidden rounded-2xl border border-border/70 bg-background/60 shadow-sm backdrop-blur md:block"
+              >
+                <motion.img
+                  src={tennis1}
+                  alt="Tennis photo"
+                  className="h-44 w-full object-cover"
+                  animate={{ y: [0, -6, 0] }}
+                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                  loading="lazy"
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="absolute -bottom-6 -right-6 hidden w-48 overflow-hidden rounded-2xl border border-border/70 bg-background/60 shadow-sm backdrop-blur md:block"
+              >
+                <motion.img
+                  src={tennis2}
+                  alt="Tennis serve"
+                  className="h-48 w-full object-cover"
+                  animate={{ y: [0, 7, 0] }}
+                  transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
+                  loading="lazy"
+                />
+              </motion.div>
             </div>
           </div>
 
@@ -56,7 +87,7 @@ const AboutSection = () => {
             <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
               Finance-minded, product-curious.
             </h2>
-            <p className="mt-4 max-w-3xl text-base leading-relaxed text-muted-foreground">
+            <p className="mt-4 max-w-3xl text-base leading-relaxed text-foreground/80">
               I work in Enterprise Risk Management (ERM) and spend a lot of my free time building.
               The common thread: taking complex systems (risk, accounting, valuation, regulation) and turning them into
               clear narratives, decision-ready frameworks, and simple tools people can actually use.
@@ -79,7 +110,7 @@ const AboutSection = () => {
                       </span>
                       <div>
                         <p className="font-medium">{c.title}</p>
-                        <p className="mt-1 text-sm text-muted-foreground">{c.body}</p>
+                        <p className="mt-1 text-sm text-foreground/80">{c.body}</p>
                       </div>
                     </div>
                   </motion.div>

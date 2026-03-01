@@ -2,6 +2,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { ExternalLink } from "lucide-react";
 import ProjectCaseStudy from "./ProjectCaseStudy";
+import ValuationChart from "./ValuationChart";
 
 import valxScreenshot from "@/assets/valx-screenshot.png";
 import cdpScreenshot from "@/assets/cdp-screenshot.png";
@@ -245,8 +246,8 @@ const ProjectsSection = () => {
             <p className="text-sm font-medium text-primary">Valuation</p>
             <h3 className="mt-2 text-2xl font-semibold tracking-tight">Valuation projects & write-ups</h3>
             <p className="mt-3 text-sm text-muted-foreground">
-              A few public write-ups where I turn a messy story into a simple model, stress-test the assumptions, and
-              show ranges (bull/base/bear). You can download the PDFs or open the LinkedIn posts.
+              Short, educational write-ups where I turn a messy narrative into a simple model, stress-test the assumptions, and show ranges (bull/base/bear).
+              This is a learning portfolio (not investment advice) — built to demonstrate how I think.
             </p>
           </div>
 
@@ -290,6 +291,14 @@ const ProjectsSection = () => {
                     </li>
                   ))}
                 </ul>
+
+                <div className="mt-5">
+                  <ValuationChart
+                    title={`${r.ticker} — price history (interactive)`}
+                    csvDefaultPath={`/valuations/data/${r.ticker}.csv`}
+                    educationalNote="The chart is interactive on purpose: it helps explain drawdowns, volatility, and why a valuation range matters. Replace the default CSV with your own export if you want real prices."
+                  />
+                </div>
 
                 <details className="mt-5 rounded-xl border border-border/60 bg-background/40 p-4">
                   <summary className="cursor-pointer select-none text-sm font-medium">

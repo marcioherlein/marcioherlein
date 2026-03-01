@@ -1,10 +1,18 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import marcioPhoto from "@/assets/marcio.png";
+import tennis1 from "@/assets/tennis-1.jpeg";
+import tennis2 from "@/assets/tennis-2.jpeg";
 
 const HeroSection = () => {
+  const ref = useRef<HTMLElement | null>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  const imageY = useTransform(scrollYProgress, [0, 1], [0, 40]);
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 0.97]);
+
   return (
-    <section className="relative overflow-hidden pt-24" aria-label="Hero">
+    <section ref={ref as any} className="relative overflow-hidden pt-24" aria-label="Hero">
       {/* Background */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-gradient-to-br from-primary/25 via-primary/10 to-transparent blur-3xl" />
@@ -28,7 +36,7 @@ const HeroSection = () => {
             <span className="block text-primary">Herlein</span>
           </h1>
 
-          <p className="mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg">
+          <p className="mt-4 max-w-2xl text-base text-foreground/80 sm:text-lg">
             Enterprise Risk Manager focused on turning ambiguity into structure — from board-ready risk narratives to
             valuation engines and small automation projects.
           </p>
@@ -48,7 +56,7 @@ const HeroSection = () => {
             </a>
           </div>
 
-          <p className="mt-6 text-xs text-muted-foreground">
+          <p className="mt-6 text-xs text-foreground/60">
             I’m not a “full-stack guru.” I build to learn — especially around AI, automation, and financial models.
           </p>
         </motion.div>
@@ -61,14 +69,43 @@ const HeroSection = () => {
         >
           <div className="relative mx-auto w-full max-w-sm">
             <div className="absolute -inset-3 -z-10 rounded-3xl bg-gradient-to-br from-primary/35 via-primary/10 to-transparent blur-xl" />
-            <div className="overflow-hidden rounded-3xl border border-border/60 bg-background/50 shadow-sm">
-              <img
-                src={marcioPhoto}
-                alt="Marcio Herlein"
-                className="h-[420px] w-full object-cover"
-                loading="eager"
+
+            <motion.div style={{ y: imageY, scale: imageScale }} className="overflow-hidden rounded-3xl border border-border/70 bg-background/60 shadow-sm backdrop-blur">
+              <img src={marcioPhoto} alt="Marcio Herlein" className="h-[420px] w-full object-cover" loading="eager" />
+            </motion.div>
+
+            {/* Floating tennis moments (motion study, iPhone-style layered cards) */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="absolute -left-10 -top-8 hidden w-44 rotate-[-6deg] overflow-hidden rounded-2xl border border-border/70 bg-background/60 shadow-sm backdrop-blur md:block"
+            >
+              <motion.img
+                src={tennis1}
+                alt="Marcio playing tennis"
+                className="h-44 w-full object-cover"
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
+                loading="lazy"
               />
-            </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+              className="absolute -bottom-10 -right-10 hidden w-48 rotate-[7deg] overflow-hidden rounded-2xl border border-border/70 bg-background/60 shadow-sm backdrop-blur md:block"
+            >
+              <motion.img
+                src={tennis2}
+                alt="Marcio serving in tennis"
+                className="h-48 w-full object-cover"
+                animate={{ y: [0, 7, 0] }}
+                transition={{ duration: 6.2, repeat: Infinity, ease: "easeInOut" }}
+                loading="lazy"
+              />
+            </motion.div>
           </div>
         </motion.div>
       </div>
