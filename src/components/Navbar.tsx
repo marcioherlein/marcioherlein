@@ -9,38 +9,41 @@ const navLinks = [
 
 const Navbar = () => {
   const { scrollY } = useScroll();
-  const opacity = useTransform(scrollY, [0, 320, 420], [0, 0, 1]);
-  const backdropBlur = useTransform(scrollY, [320, 420], [0, 16]);
-  const blurFilter = useTransform(backdropBlur, (v) => `blur(${v}px)`);
+  const y = useTransform(scrollY, [0, 120], [-8, 0]);
+  const opacity = useTransform(scrollY, [0, 160], [0, 1]);
 
   return (
-    <motion.header
-      style={{ opacity, backdropFilter: blurFilter }}
-      className="fixed inset-x-0 top-0 z-50 border-b border-border/40 bg-background/80"
-    >
+    <motion.header style={{ y, opacity }} className="fixed inset-x-0 top-0 z-50">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <a
           href="#"
-          className="flex items-center gap-2 rounded-md px-2 py-1 text-sm font-semibold tracking-tight hover:bg-accent"
+          className="group inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-background/70 px-3 py-2 text-sm font-semibold tracking-tight text-foreground shadow-sm backdrop-blur transition hover:bg-accent"
           aria-label="Go to top"
         >
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-foreground text-background">
+          <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-foreground text-background">
             MH
           </span>
           <span className="hidden sm:block">Marcio Herlein</span>
         </a>
 
-        <nav className="flex items-center gap-1">
+        <nav className="hidden items-center gap-1 rounded-full border border-foreground/10 bg-background/70 p-1 text-sm text-foreground/70 shadow-sm backdrop-blur sm:flex">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="rounded-md px-3 py-2 text-sm text-foreground/70 transition hover:bg-accent hover:text-foreground"
+              className="rounded-full px-4 py-2 text-sm font-medium text-foreground/70 transition hover:bg-foreground hover:text-background"
             >
               {link.label}
             </a>
           ))}
         </nav>
+
+        <a
+          href="#contact"
+          className="inline-flex items-center rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background shadow-sm transition hover:opacity-90"
+        >
+          Contact
+        </a>
       </div>
     </motion.header>
   );

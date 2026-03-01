@@ -1,8 +1,25 @@
-import { useMemo, useState } from "react";
-import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from "recharts";
+import { useEffect, useMemo, useState } from "react";
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ReferenceLine,
+  Legend,
+} from "recharts";
 import { Upload } from "lucide-react";
 
 type Point = { date: string; value: number };
+
+type Targets = {
+  bull?: number;
+  base?: number;
+  bear?: number;
+  current?: number;
+};
 
 function normalizeTo100(points: Point[]): Point[] {
   if (!points.length) return points;
@@ -27,7 +44,23 @@ function parseCsv(text: string): Point[] {
     if (!d || !Number.isFinite(v)) continue;
     out.push({ date: d, value: v });
   }
+
+  // Sort by date ascending (best effort)
+  out.sort((a, b) => {
+    const da = new Date(a.date).getTime();
+    const db = new Date(b.date).getTime();
+    if (!Number.isFinite(da) || !Number.isFinite(db)) return 0;
+    return da - db;
+  });
+
   return out;
+}
+
+function lastThreeYears(points: Point[]): Point[] {
+  // If the CSV is monthly (36 rows), keep as-is.
+  // If it is daily, keep last ~780 trading days (~3 years) to stay responsive.
+  if (points.length <= 40) return points;
+  return points.slice(-780);
 }
 
 const fmt = new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 });
@@ -36,23 +69,25 @@ const ValuationChart = ({
   title,
   csvDefaultPath,
   educationalNote,
+  targets,
 }: {
   title: string;
   csvDefaultPath: string;
   educationalNote: string;
+  targets?: Targets;
 }) => {
-  const [mode, setMode] = useState<"normalized" | "price">("normalized");
+  const [mode, setMode] = useState<"normalized" | "price">("price");
+  const [showTargets, setShowTargets] = useState(true);
   const [custom, setCustom] = useState<Point[] | null>(null);
-
   const [defaultData, setDefaultData] = useState<Point[] | null>(null);
 
-  useMemo(() => {
+  useEffect(() => {
     let isMounted = true;
     fetch(csvDefaultPath)
       .then((r) => r.text())
       .then((t) => {
         if (!isMounted) return;
-        const parsed = parseCsv(t);
+        const parsed = lastThreeYears(parseCsv(t));
         setDefaultData(parsed);
       })
       .catch(() => setDefaultData([]));
@@ -61,36 +96,58 @@ const ValuationChart = ({
     };
   }, [csvDefaultPath]);
 
-  const raw = custom ?? defaultData ?? [];
-  const data = mode === "normalized" ? normalizeTo100(raw) : raw;
+  const raw = useMemo(() => {
+    const base = custom ?? defaultData ?? [];
+    return lastThreeYears(base);
+  }, [custom, defaultData]);
+
+  const data = useMemo(() => (mode === "normalized" ? normalizeTo100(raw) : raw), [mode, raw]);
+
+  const yFormatter = (v: any) => (mode === "normalized" ? `${v}` : fmt.format(Number(v)));
+
+  const targetLinesEnabled = mode === "price" && showTargets && !!targets;
 
   return (
-    <div className="rounded-2xl border border-border/70 bg-background/70 p-5 shadow-sm backdrop-blur">
+    <div className="rounded-[28px] border border-foreground/10 bg-background/70 p-5 shadow-sm backdrop-blur">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h4 className="text-sm font-semibold tracking-tight text-foreground">{title}</h4>
-          <p className="mt-1 text-xs text-muted-foreground">{educationalNote}</p>
+          <p className="mt-1 text-xs leading-relaxed text-foreground/65">{educationalNote}</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           <button
-            onClick={() => setMode("normalized")}
-            className={`rounded-full px-3 py-1 text-xs transition ${
-              mode === "normalized" ? "bg-foreground text-background" : "border border-border bg-background hover:bg-accent"
-            }`}
-          >
-            Normalized (start=100)
-          </button>
-          <button
             onClick={() => setMode("price")}
             className={`rounded-full px-3 py-1 text-xs transition ${
-              mode === "price" ? "bg-foreground text-background" : "border border-border bg-background hover:bg-accent"
+              mode === "price"
+                ? "bg-foreground text-background"
+                : "border border-foreground/10 bg-background hover:bg-accent"
             }`}
           >
             Price
           </button>
+          <button
+            onClick={() => setMode("normalized")}
+            className={`rounded-full px-3 py-1 text-xs transition ${
+              mode === "normalized"
+                ? "bg-foreground text-background"
+                : "border border-foreground/10 bg-background hover:bg-accent"
+            }`}
+          >
+            Normalized (start=100)
+          </button>
 
-          <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground transition hover:bg-accent">
+          <button
+            onClick={() => setShowTargets((s) => !s)}
+            className={`rounded-full px-3 py-1 text-xs transition ${
+              showTargets ? "border border-foreground/10 bg-background hover:bg-accent" : "border border-foreground/10 bg-background hover:bg-accent"
+            }`}
+            title="Toggle valuation target lines (bull/base/bear)"
+          >
+            Targets {showTargets ? "on" : "off"}
+          </button>
+
+          <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-foreground/10 bg-background px-3 py-1 text-xs text-foreground/80 transition hover:bg-accent">
             <Upload className="h-3.5 w-3.5" />
             Load CSV
             <input
@@ -103,7 +160,7 @@ const ValuationChart = ({
                 const reader = new FileReader();
                 reader.onload = () => {
                   const text = String(reader.result || "");
-                  const parsed = parseCsv(text);
+                  const parsed = lastThreeYears(parseCsv(text));
                   setCustom(parsed.length ? parsed : []);
                 };
                 reader.readAsText(f);
@@ -113,28 +170,35 @@ const ValuationChart = ({
         </div>
       </div>
 
-      <div className="mt-4 h-[260px] w-full">
+      <div className="mt-4 h-[280px] w-full">
         <ResponsiveContainer>
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" tick={{ fontSize: 11 }} minTickGap={24} />
-            <YAxis
-              tick={{ fontSize: 11 }}
-              width={44}
-              tickFormatter={(v) => (mode === "normalized" ? `${v}` : fmt.format(v))}
-            />
-            <Tooltip
-              formatter={(v: any) => (mode === "normalized" ? `${v}` : fmt.format(Number(v)))}
-              labelFormatter={(l) => `Date: ${l}`}
-            />
-            <Line type="monotone" dataKey="value" strokeWidth={2} dot={false} />
+            <XAxis dataKey="date" tick={{ fontSize: 11 }} minTickGap={28} />
+            <YAxis tick={{ fontSize: 11 }} width={46} tickFormatter={yFormatter} />
+            <Tooltip formatter={(v: any) => yFormatter(v)} labelFormatter={(l) => `Date: ${l}`} />
+            <Legend wrapperStyle={{ fontSize: 11 }} />
+            <Line type="monotone" name="Price" dataKey="value" strokeWidth={2} dot={false} />
+
+            {targetLinesEnabled && targets?.bear != null ? (
+              <ReferenceLine y={targets.bear} strokeDasharray="6 6" ifOverflow="extendDomain" label={{ value: `Bear ${targets.bear}`, position: "insideTopLeft", fontSize: 10 }} />
+            ) : null}
+            {targetLinesEnabled && targets?.base != null ? (
+              <ReferenceLine y={targets.base} strokeDasharray="6 6" ifOverflow="extendDomain" label={{ value: `Base ${targets.base}`, position: "insideTopLeft", fontSize: 10 }} />
+            ) : null}
+            {targetLinesEnabled && targets?.bull != null ? (
+              <ReferenceLine y={targets.bull} strokeDasharray="6 6" ifOverflow="extendDomain" label={{ value: `Bull ${targets.bull}`, position: "insideTopLeft", fontSize: 10 }} />
+            ) : null}
+            {targetLinesEnabled && targets?.current != null ? (
+              <ReferenceLine y={targets.current} strokeDasharray="2 6" ifOverflow="extendDomain" label={{ value: `Ref ${targets.current}`, position: "insideTopRight", fontSize: 10 }} />
+            ) : null}
           </LineChart>
         </ResponsiveContainer>
       </div>
 
-      <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">
-        Data source: local CSV in this repo (default) or your uploaded CSV. This is intentional — it keeps the site
-        educational and non-commercial, and avoids scraping market data.
+      <p className="mt-3 text-[11px] leading-relaxed text-foreground/60">
+        Default data is a local CSV in this repo (a sample dataset unless you replace it). You can upload your own export any time.
+        This keeps the site educational and avoids turning it into a market-data product.
       </p>
     </div>
   );

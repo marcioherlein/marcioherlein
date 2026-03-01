@@ -1,13 +1,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import {
-  ShieldCheck,
-  FileBarChart,
-  Scale,
-  Target,
-  AlertTriangle,
-  Cloud,
-} from "lucide-react";
+import { ShieldCheck, FileBarChart, Scale, Target, AlertTriangle, Cloud } from "lucide-react";
+import ScrollBackdrop from "./ScrollBackdrop";
 
 const workBoxes = [
   {
@@ -74,12 +68,9 @@ const ExperienceSection = () => {
   const isGridInView = useInView(gridRef, { once: true, margin: "-80px" });
 
   return (
-    <section
-      id="experience"
-      ref={sectionRef}
-      className="scroll-mt-24 border-t border-border/40"
-      aria-label="Experience"
-    >
+    <section id="experience" ref={sectionRef} className="relative scroll-mt-24 border-t border-border/40" aria-label="Experience">
+      <ScrollBackdrop />
+
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <motion.div
           ref={headerRef}
@@ -89,14 +80,33 @@ const ExperienceSection = () => {
           className="max-w-3xl"
         >
           <p className="text-sm font-medium text-primary">ERM</p>
-          <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
-            Enterprise Risk Management — in real life.
+          <h2 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
+            Enterprise Risk Management{" "}
+            <span className="bg-gradient-to-r from-violet-600 via-indigo-600 to-emerald-600 bg-clip-text text-transparent">
+              — in real life.
+            </span>
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-            I work at the intersection of finance, compliance, and operations. The job is less about buzzwords and more
-            about making risks legible: what’s happening, why it matters, what it could cost, and what people need to do
-            next.
+          <p className="mt-5 text-base leading-relaxed text-foreground/75">
+            My job is to translate ambiguity into action: risk statements, KRIs, mitigations, ownership, and loss scenarios.
+            This section is intentionally non-sensitive — it describes the type of work, not internal details.
           </p>
+
+          <div className="mt-7 rounded-2xl border border-foreground/10 bg-background/65 p-5 shadow-sm backdrop-blur">
+            <p className="text-sm font-semibold tracking-tight text-foreground">Regulatory context</p>
+            <p className="mt-1 text-sm text-foreground/70">
+              Frameworks I frequently reference when translating requirements into risk statements and mitigations.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {frameworks.map((f) => (
+                <span
+                  key={f}
+                  className="rounded-full border border-foreground/10 bg-foreground/5 px-3 py-1 text-xs font-medium text-foreground/80"
+                >
+                  {f}
+                </span>
+              ))}
+            </div>
+          </div>
         </motion.div>
 
         <motion.div
@@ -104,22 +114,26 @@ const ExperienceSection = () => {
           initial={{ opacity: 0, y: 12 }}
           animate={isGridInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.05 }}
-          className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
         >
-          {workBoxes.map((b) => {
+          {workBoxes.map((b, idx) => {
             const Icon = b.icon;
             return (
-              <div
+              <motion.div
                 key={b.title}
-                className="group rounded-2xl border border-border/60 bg-background/50 p-5 shadow-sm transition hover:bg-accent"
+                initial={{ opacity: 0, y: 10 }}
+                animate={isGridInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: 0.06 + idx * 0.03 }}
+                className="group relative overflow-hidden rounded-2xl border border-foreground/10 bg-background/65 p-5 shadow-sm backdrop-blur"
               >
+                <div className="absolute -right-14 -top-14 h-40 w-40 rounded-full bg-gradient-to-br from-indigo-500/14 to-transparent blur-2xl opacity-0 transition duration-700 group-hover:opacity-100" />
                 <div className="flex items-start gap-3">
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-background">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-foreground/5 text-foreground">
                     <Icon className="h-5 w-5" />
                   </span>
                   <div>
-                    <p className="font-medium">{b.title}</p>
-                    <p className="mt-1 text-sm text-muted-foreground">{b.description}</p>
+                    <p className="text-sm font-semibold tracking-tight">{b.title}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-foreground/70">{b.description}</p>
                   </div>
                 </div>
 
@@ -127,33 +141,16 @@ const ExperienceSection = () => {
                   {b.tags.map((t) => (
                     <span
                       key={t}
-                      className="rounded-full border border-border/60 bg-background/60 px-3 py-1 text-xs text-muted-foreground"
+                      className="rounded-full border border-foreground/10 bg-background/60 px-3 py-1 text-xs text-foreground/70"
                     >
                       {t}
                     </span>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </motion.div>
-
-        <div className="mt-10 rounded-2xl border border-border/60 bg-background/50 p-5 shadow-sm">
-          <p className="text-sm font-medium">Regulatory context</p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Frameworks I frequently reference when translating requirements into risk statements and mitigations.
-          </p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {frameworks.map((f) => (
-              <span
-                key={f}
-                className="rounded-full bg-accent px-3 py-1 text-xs text-muted-foreground"
-              >
-                {f}
-              </span>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );

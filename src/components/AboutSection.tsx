@@ -4,6 +4,7 @@ import { Dumbbell, LineChart, Sparkles, Trophy } from "lucide-react";
 import marcioPhoto from "@/assets/marcio.png";
 import tennis1 from "@/assets/tennis-1.jpeg";
 import tennis2 from "@/assets/tennis-2.jpeg";
+import ScrollBackdrop from "./ScrollBackdrop";
 
 const cards = [
   {
@@ -33,67 +34,66 @@ const AboutSection = () => {
   const isInView = useInView(ref, { once: true, margin: "-120px" });
 
   return (
-    <section id="about" className="scroll-mt-24 border-t border-border/40">
+    <section id="about" className="relative scroll-mt-24 border-t border-border/40" aria-label="About">
+      <ScrollBackdrop
+        layers={[
+          {
+            src: tennis1,
+            className: "absolute -left-32 top-28 h-[320px] w-[320px] rounded-[44px] object-cover",
+            opacity: 0.10,
+            blur: 0,
+            rotate: "-10deg",
+            speed: 55,
+          },
+          {
+            src: tennis2,
+            className: "absolute -right-28 bottom-20 h-[340px] w-[340px] rounded-[48px] object-cover",
+            opacity: 0.09,
+            blur: 0,
+            rotate: "10deg",
+            speed: 70,
+          },
+        ]}
+      />
+
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 12 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="grid grid-cols-1 gap-10 lg:grid-cols-12"
+          className="grid grid-cols-1 gap-12 lg:grid-cols-12"
         >
           <div className="lg:col-span-5">
             <div className="relative">
-              <div className="overflow-hidden rounded-3xl border border-border/70 bg-background/60 shadow-sm backdrop-blur">
-                <img src={marcioPhoto} alt="Marcio Herlein" className="h-[420px] w-full object-cover" loading="lazy" />
+              <div className="absolute -inset-3 -z-10 rounded-[40px] bg-gradient-to-br from-indigo-500/18 via-emerald-500/10 to-transparent blur-2xl" />
+              <div className="overflow-hidden rounded-[40px] border border-foreground/10 bg-background/55 shadow-sm backdrop-blur">
+                <img src={marcioPhoto} alt="Marcio Herlein" className="h-[460px] w-full object-cover" loading="lazy" />
               </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="absolute -left-6 -top-6 hidden w-44 overflow-hidden rounded-2xl border border-border/70 bg-background/60 shadow-sm backdrop-blur md:block"
-              >
-                <motion.img
-                  src={tennis1}
-                  alt="Tennis photo"
-                  className="h-44 w-full object-cover"
-                  animate={{ y: [0, -6, 0] }}
-                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                  loading="lazy"
-                />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="absolute -bottom-6 -right-6 hidden w-48 overflow-hidden rounded-2xl border border-border/70 bg-background/60 shadow-sm backdrop-blur md:block"
-              >
-                <motion.img
-                  src={tennis2}
-                  alt="Tennis serve"
-                  className="h-48 w-full object-cover"
-                  animate={{ y: [0, 7, 0] }}
-                  transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
-                  loading="lazy"
-                />
-              </motion.div>
+              {/* Background caption chip */}
+              <div className="absolute bottom-4 left-4 rounded-full border border-foreground/10 bg-background/70 px-4 py-2 text-xs text-foreground/70 shadow-sm backdrop-blur">
+                Buenos Aires • ERM • Finance MSc
+              </div>
             </div>
           </div>
 
           <div className="lg:col-span-7">
             <p className="text-sm font-medium text-primary">About</p>
-            <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Finance-minded, product-curious.
+            <h2 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
+              Finance-minded.{" "}
+              <span className="bg-gradient-to-r from-violet-600 via-indigo-600 to-emerald-600 bg-clip-text text-transparent">
+                Product-curious.
+              </span>
             </h2>
-            <p className="mt-4 max-w-3xl text-base leading-relaxed text-foreground/80">
-              I work in Enterprise Risk Management (ERM) and spend a lot of my free time building.
-              The common thread: taking complex systems (risk, accounting, valuation, regulation) and turning them into
-              clear narratives, decision-ready frameworks, and simple tools people can actually use.
+
+            <p className="mt-5 max-w-3xl text-base leading-relaxed text-foreground/75">
+              I work in Enterprise Risk Management (ERM) and spend a lot of my free time building. The common thread:
+              taking complex systems (risk, accounting, valuation, regulation) and turning them into clear narratives,
+              decision-ready frameworks, and simple tools people can actually use.
             </p>
 
-            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="mt-9 grid grid-cols-1 gap-4 sm:grid-cols-2">
               {cards.map((c, i) => {
                 const Icon = c.icon;
                 return (
@@ -101,21 +101,28 @@ const AboutSection = () => {
                     key={c.title}
                     initial={{ opacity: 0, y: 10 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.5, delay: 0.05 + i * 0.05 }}
-                    className="rounded-2xl border border-border/60 bg-background/50 p-5 shadow-sm"
+                    transition={{ duration: 0.5, delay: 0.08 + i * 0.05 }}
+                    className="group relative overflow-hidden rounded-2xl border border-foreground/10 bg-background/65 p-5 shadow-sm backdrop-blur"
                   >
+                    <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-to-br from-indigo-500/20 to-transparent blur-2xl opacity-0 transition duration-700 group-hover:opacity-100" />
                     <div className="flex items-start gap-3">
-                      <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-accent">
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-foreground/5 text-foreground">
                         <Icon className="h-5 w-5" />
                       </span>
                       <div>
-                        <p className="font-medium">{c.title}</p>
-                        <p className="mt-1 text-sm text-foreground/80">{c.body}</p>
+                        <p className="text-sm font-semibold tracking-tight">{c.title}</p>
+                        <p className="mt-1 text-sm leading-relaxed text-foreground/70">{c.body}</p>
                       </div>
                     </div>
                   </motion.div>
                 );
               })}
+            </div>
+
+            <div className="mt-8 rounded-2xl border border-foreground/10 bg-background/65 p-5 text-sm text-foreground/70 shadow-sm backdrop-blur">
+              <span className="font-medium text-foreground">What this is:</span> a clean, educational portfolio of how I
+              reason and build. <span className="font-medium text-foreground">What this is not:</span> a job-hunt site or
+              a commercial product.
             </div>
           </div>
         </motion.div>
