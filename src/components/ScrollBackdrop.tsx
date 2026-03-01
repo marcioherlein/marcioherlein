@@ -43,7 +43,7 @@ function BackdropImage({ layer, progress }: { layer: BackdropLayer; progress: Mo
   );
 }
 
-const ScrollBackdrop = ({ layers }: { layers?: BackdropLayer[] }) => {
+const ScrollBackdrop = ({ layers, vignette = "default" }: { layers?: BackdropLayer[]; vignette?: "default" | "soft" | "none" }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
 
@@ -58,8 +58,16 @@ const ScrollBackdrop = ({ layers }: { layers?: BackdropLayer[] }) => {
         <BackdropImage key={idx} layer={layer} progress={scrollYProgress} />
       ))}
 
-      {/* Soft vignette to keep text readable */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_18%,rgba(255,255,255,0.70)_72%,rgba(255,255,255,0.92)_100%)] dark:bg-[radial-gradient(ellipse_at_center,transparent_18%,rgba(0,0,0,0.45)_72%,rgba(0,0,0,0.75)_100%)]" />
+      {/* Vignette (optional) to keep text readable */}
+{vignette !== "none" && (
+  <div
+    className={
+      vignette === "soft"
+        ? "absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_28%,rgba(255,255,255,0.40)_72%,rgba(255,255,255,0.70)_100%)] dark:bg-[radial-gradient(ellipse_at_center,transparent_24%,rgba(0,0,0,0.32)_74%,rgba(0,0,0,0.62)_100%)]"
+        : "absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_18%,rgba(255,255,255,0.70)_72%,rgba(255,255,255,0.92)_100%)] dark:bg-[radial-gradient(ellipse_at_center,transparent_18%,rgba(0,0,0,0.45)_72%,rgba(0,0,0,0.75)_100%)]"
+    }
+  />
+)}
     </div>
   );
 };

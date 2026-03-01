@@ -1,7 +1,6 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Dumbbell, LineChart, Sparkles, Trophy } from "lucide-react";
-import marcioPhoto from "@/assets/marcio.png";
 import tennis1 from "@/assets/tennis-1.jpeg";
 import tennis2 from "@/assets/tennis-2.jpeg";
 import ScrollBackdrop from "./ScrollBackdrop";
@@ -36,20 +35,21 @@ const AboutSection = () => {
   return (
     <section id="about" className="relative scroll-mt-24 border-t border-border/40" aria-label="About">
       <ScrollBackdrop
+        vignette="soft"
         layers={[
           {
             src: tennis1,
-            className: "absolute -left-32 top-28 h-[320px] w-[320px] rounded-[44px] object-cover",
-            opacity: 0.10,
-            blur: 0,
+            className: "absolute -left-32 top-28 h-[320px] w-[320px] rounded-[44px] object-cover mix-blend-multiply",
+            opacity: 0.20,
+            blur: 1,
             rotate: "-10deg",
             speed: 55,
           },
           {
             src: tennis2,
-            className: "absolute -right-28 bottom-20 h-[340px] w-[340px] rounded-[48px] object-cover",
-            opacity: 0.09,
-            blur: 0,
+            className: "absolute -right-28 bottom-20 h-[340px] w-[340px] rounded-[48px] object-cover mix-blend-multiply",
+            opacity: 0.18,
+            blur: 1,
             rotate: "10deg",
             speed: 70,
           },
@@ -64,21 +64,7 @@ const AboutSection = () => {
           transition={{ duration: 0.6 }}
           className="grid grid-cols-1 gap-12 lg:grid-cols-12"
         >
-          <div className="lg:col-span-5">
-            <div className="relative">
-              <div className="absolute -inset-3 -z-10 rounded-[40px] bg-gradient-to-br from-indigo-500/18 via-emerald-500/10 to-transparent blur-2xl" />
-              <div className="overflow-hidden rounded-[40px] border border-foreground/10 bg-background/55 shadow-sm backdrop-blur">
-                <img src={marcioPhoto} alt="Marcio Herlein" className="h-[460px] w-full object-cover" loading="lazy" />
-              </div>
-
-              {/* Background caption chip */}
-              <div className="absolute bottom-4 left-4 rounded-full border border-foreground/10 bg-background/70 px-4 py-2 text-xs text-foreground/70 shadow-sm backdrop-blur">
-                Buenos Aires • ERM • Finance MSc
-              </div>
-            </div>
-          </div>
-
-          <div className="lg:col-span-7">
+          <div className="lg:col-span-12">
             <p className="text-sm font-medium text-primary">About</p>
             <h2 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
               Finance-minded.{" "}

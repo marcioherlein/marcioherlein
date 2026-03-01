@@ -2,39 +2,18 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import marcioPhoto from "@/assets/marcio.png";
-import tennis1 from "@/assets/tennis-1.jpeg";
-import tennis2 from "@/assets/tennis-2.jpeg";
 import ScrollBackdrop from "./ScrollBackdrop";
 
 const HeroSection = () => {
   const ref = useRef<HTMLElement | null>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
 
-  const portraitY = useTransform(scrollYProgress, [0, 1], [0, 30]);
-  const portraitScale = useTransform(scrollYProgress, [0, 1], [1, 0.98]);
+  const portraitY = useTransform(scrollYProgress, [0, 1], [0, 60]);
+  const portraitScale = useTransform(scrollYProgress, [0, 1], [1.02, 1.14]);
 
   return (
     <section ref={ref as any} className="relative overflow-hidden pt-24" aria-label="Hero">
-      <ScrollBackdrop
-        layers={[
-          {
-            src: tennis1,
-            className: "absolute -left-24 top-16 h-[340px] w-[340px] rounded-[36px] object-cover",
-            opacity: 0.14,
-            blur: 1,
-            rotate: "-8deg",
-            speed: 70,
-          },
-          {
-            src: tennis2,
-            className: "absolute -right-20 top-32 h-[360px] w-[360px] rounded-[40px] object-cover",
-            opacity: 0.12,
-            blur: 1,
-            rotate: "8deg",
-            speed: 85,
-          },
-        ]}
-      />
+      <ScrollBackdrop />
 
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-4 pb-16 pt-10 sm:px-6 lg:grid-cols-12 lg:px-8 lg:pb-20">
         {/* Copy */}
@@ -87,9 +66,9 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="lg:col-span-5"
+          className="lg:col-span-5 lg:flex lg:justify-center"
         >
-          <div className="relative mx-auto w-full max-w-sm">
+          <div className="relative mx-auto w-full max-w-md">
             <div className="absolute -inset-3 -z-10 rounded-[36px] bg-gradient-to-br from-indigo-500/25 via-emerald-500/10 to-transparent blur-2xl" />
 
             <motion.div
@@ -99,7 +78,7 @@ const HeroSection = () => {
               <img
                 src={marcioPhoto}
                 alt="Marcio Herlein"
-                className="h-[440px] w-full object-cover"
+                className="h-[480px] w-full object-cover object-center"
                 loading="eager"
               />
 
