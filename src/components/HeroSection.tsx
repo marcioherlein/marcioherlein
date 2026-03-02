@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ArrowRight } from "lucide-react";
 import marcioPhoto from "@/assets/marcio.png";
 import ScrollBackdrop from "./ScrollBackdrop";
 
@@ -43,25 +43,29 @@ const HeroSection = () => {
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <a
               href="#projects"
-              className="rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background shadow-sm transition hover:opacity-90"
+              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-violet-600 via-indigo-600 to-emerald-600 px-7 py-3 text-sm font-medium text-white shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/40 hover:brightness-110"
             >
-              View projects
+              <span className="relative z-10">View projects</span>
+              <ArrowRight className="relative z-10 h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
             </a>
             <a
               href="#experience"
-              className="rounded-full border border-foreground/15 bg-background/60 px-6 py-3 text-sm font-medium text-foreground/80 shadow-sm backdrop-blur transition hover:bg-accent"
+              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-foreground/10 bg-background/60 px-7 py-3 text-sm font-medium text-foreground/80 shadow-sm backdrop-blur transition-all duration-300 hover:border-indigo-400/30 hover:shadow-lg hover:shadow-indigo-500/10"
             >
-              ERM work
+              <span className="relative z-10 bg-gradient-to-r from-violet-600 via-indigo-600 to-emerald-600 bg-clip-text text-transparent">
+                ERM work
+              </span>
+              <ArrowRight className="relative z-10 h-4 w-4 text-indigo-500 transition-transform duration-300 group-hover:translate-x-0.5" />
             </a>
           </div>
 
           <p className="mt-6 text-xs leading-relaxed text-foreground/60">
-            This site is a learning portfolio. It’s designed to show how I think (structure, stress tests, clarity) — not
+            This site is a learning portfolio. It's designed to show how I think (structure, stress tests, clarity) — not
             to sell services or compete with anyone.
           </p>
         </motion.div>
 
-        {/* Portrait */}
+        {/* Portrait — bleed into background */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -69,11 +73,12 @@ const HeroSection = () => {
           className="lg:col-span-5 lg:flex lg:justify-center"
         >
           <div className="relative mx-auto w-full max-w-md">
-            <div className="absolute -inset-3 -z-10 rounded-[36px] bg-gradient-to-br from-indigo-500/25 via-emerald-500/10 to-transparent blur-2xl" />
+            {/* Soft glow behind portrait */}
+            <div className="absolute -inset-6 -z-10 rounded-full bg-gradient-to-br from-indigo-500/20 via-emerald-500/10 to-violet-500/15 blur-3xl" />
 
             <motion.div
               style={{ y: portraitY, scale: portraitScale }}
-              className="group relative overflow-hidden rounded-[36px] border border-foreground/10 bg-background/50 shadow-sm backdrop-blur"
+              className="relative overflow-hidden rounded-[36px]"
             >
               <img
                 src={marcioPhoto}
@@ -82,14 +87,17 @@ const HeroSection = () => {
                 loading="eager"
               />
 
-              {/* Gloss overlay */}
+              {/* Gradient mask — photo fades into page */}
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/0 to-background/10" />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-l from-background/30 via-transparent to-background/30" />
+
+              {/* Hover gloss */}
               <div className="pointer-events-none absolute inset-0 opacity-0 transition duration-700 group-hover:opacity-100">
-                <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-white/25 blur-2xl" />
-                <div className="absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-white/10 blur-2xl" />
+                <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-white/15 blur-2xl" />
               </div>
             </motion.div>
 
-            <div className="absolute -bottom-7 left-1/2 -translate-x-1/2 rounded-full border border-foreground/10 bg-background/70 px-4 py-2 text-xs text-foreground/70 shadow-sm backdrop-blur">
+            <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-foreground/10 bg-background/80 px-4 py-2 text-xs text-foreground/70 shadow-sm backdrop-blur">
               Risk → Model → Decision
             </div>
           </div>

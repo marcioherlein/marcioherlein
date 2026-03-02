@@ -40,7 +40,7 @@ const Navbar = () => {
 
         <a
           href="#contact"
-          className="inline-flex items-center rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background shadow-sm transition hover:opacity-90"
+          className="inline-flex items-center rounded-full bg-gradient-to-r from-violet-600 via-indigo-600 to-emerald-600 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/40 hover:brightness-110"
         >
           Contact
         </a>
