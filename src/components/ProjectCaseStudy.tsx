@@ -9,7 +9,7 @@ interface ProjectProps {
   features: string[];
   techStack: string[];
   liveUrl?: string;
-  screenshotUrl: string;
+  screenshotUrl?: string;
   index: number;
 }
 
@@ -42,14 +42,20 @@ const ProjectCaseStudy = ({
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-center">
         <div className={`lg:col-span-6 ${isEven ? "lg:order-1" : "lg:order-2"}`}>
           <div className="relative overflow-hidden rounded-[28px] border border-foreground/10 bg-foreground/5 shadow-sm">
-            <motion.img
-              src={screenshotUrl}
-              alt={`${title} screenshot`}
-              className="h-full w-full object-cover"
-              loading="lazy"
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            />
+            {screenshotUrl ? (
+              <motion.img
+                src={screenshotUrl}
+                alt={`${title} screenshot`}
+                className="h-full w-full object-cover"
+                loading="lazy"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              />
+            ) : (
+              <div className="flex h-64 items-center justify-center bg-gradient-to-br from-foreground/5 to-foreground/10 lg:h-full lg:min-h-[260px]">
+                <span className="text-2xl font-semibold tracking-tight text-foreground/20">{title}</span>
+              </div>
+            )}
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
           </div>
         </div>

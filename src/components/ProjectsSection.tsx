@@ -30,8 +30,22 @@ const briefData = {
 
 const caseStudies = [
   {
-    title: "VAL-X",
+    title: "ROFEX WTI Futures Dashboard",
     subtitle: "Case Study 01",
+    description:
+      "A professional oil trading terminal for MATBA ROFEX WTI futures. Monitors term structure, regime classification, calendar spreads, and policy events — with a trade journal, payoff calculator, and strategy coaching. Built as a decision-support tool, not a bot.",
+    features: [
+      "Live Google Sheets data feed (no backend)",
+      "Term structure + backwardation/contango detection",
+      "Rule-based regime classifier (6 labels)",
+      "Trade journal with payoff & risk calculator",
+    ],
+    techStack: ["Next.js 14", "TypeScript", "Zustand", "Recharts", "Tailwind", "Vercel"],
+    liveUrl: "https://dashboard-futures.vercel.app",
+  },
+  {
+    title: "VAL-X",
+    subtitle: "Case Study 02",
     description:
       "A valuation dashboard that aggregates market context and supports deterministic DCF workflows. Built as an educational interface for fast triangulation.",
     features: [
@@ -46,7 +60,7 @@ const caseStudies = [
   },
   {
     title: "CDP",
-    subtitle: "Case Study 02",
+    subtitle: "Case Study 03",
     description:
       "A creative portfolio concept with motion + editorial layout — built as a design and interaction study.",
     features: ["Scroll-triggered parallax", "Responsive layout", "Motion-driven storytelling", "High-contrast typography"],
